@@ -8,17 +8,17 @@ import { Router } from '@angular/router';
 })
 export class CandidateSanboxService {
 
-  constructor(private CandidatesService: CandidatesService, private _snackBar: MatSnackBar,private router:Router) { }
+  constructor(private CandidatesService: CandidatesService, private _snackBar: MatSnackBar, private router: Router) { }
 
   Candidates$ = new Subject<any>();
   progress$ = new BehaviorSubject<boolean>(false);
-  SaveCandidates(data: any) {
-    this.CandidatesService.saveCandidates(data)
+  SaveCandidates(data: any, type: string) {
+    this.CandidatesService.saveCandidates(data, type)
       .subscribe(() => {
         this._snackBar.open("Saved Successfully", null, {
           duration: 2000,
         })
-        this.router.navigate(['benchlist'])
+        this.router.navigate([type])
       }, console.log)
   }
 

@@ -1,15 +1,31 @@
-
 <mat-card class="example-card">
     <mat-card-header>
-        Upload Candidates
+        Upload
     </mat-card-header>
+
     <mat-card-content>
         <div fxLayout="column" fxLayoutAlign="space-around center" style="padding-top: 30px;">
+
             <div class="width-100">
-                <input type="file" #input  placeholder="Input">
+                <div>
+                    <mat-form-field class="float-left">
+                        <mat-label>Type</mat-label>
+                        <mat-select [value]="selectedType" (selectionChange)="selectedType=$event.value">
+                            <mat-option [value]="''">
+                                Select
+                            </mat-option>
+                            <mat-option [value]="type.value" *ngFor="let type of types">
+                                {{type.title}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <input class="float-left" type="file" #input placeholder="Input">
+
             </div>
             <div class="width-100">
-                <button mat-raised-button color="primary" (click)="ReadFileData(input)" class="float-right">Read Data</button>
+                <button mat-raised-button color="primary" (click)="ReadFileData(input)" class="float-right">Read
+                    Data</button>
             </div>
 
         </div>

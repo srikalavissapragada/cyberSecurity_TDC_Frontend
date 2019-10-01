@@ -7,13 +7,13 @@ import { HttpClient } from '@angular/common/http';
 export class CandidatesService {
 
   constructor(private http: HttpClient) { }
-  baseUrl = "/api/candidates";
+  baseUrl = "/api/";
 
-  saveCandidates(data) {
-    return this.http.post(`${this.baseUrl}/save`, data);
+  saveCandidates(data, type) {
+    return this.http.post(`${this.baseUrl}${type}/save`, data);
   }
 
-  getAllCandidates(){
-    return this.http.get(this.baseUrl+"/all");
+  getAllCandidates() {
+    return this.http.get(this.baseUrl + "/all");
   }
 }

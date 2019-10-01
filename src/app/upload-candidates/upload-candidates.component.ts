@@ -14,10 +14,17 @@ export class UploadCandidatesComponent implements OnInit {
     this.CandidateSanboxService.getAllCandidates();
   }
 
+  types = [
+    {
+      title: "Bench List", value: "benchlist"
+    },
+    {
+      title: "Subcons", value: "subcons"
+    }
+  ]
+  selectedType = "''";
   ReadFileData(input: HTMLInputElement) {
     if (input.files.length) {
-
-
       this.CandidateSanboxService.progress$.next(true);
       const reader: FileReader = new FileReader();
       reader.onload = (e: any) => {
@@ -33,7 +40,7 @@ export class UploadCandidatesComponent implements OnInit {
 
         const data = (XLSX.utils.sheet_to_json(ws, { header: 1 }));
         const savingData = this.prepareObject(data)
-        this.CandidateSanboxService.SaveCandidates(savingData);
+        this.CandidateSanboxService.SaveCandidates(savingData, this.selectedType);
 
         this.CandidateSanboxService.progress$.next(false);
 
@@ -44,28 +51,30 @@ export class UploadCandidatesComponent implements OnInit {
 
   prepareObject(data: Array<any>, columns = data[0]) {
     const savingColumns = columns.map(x => x.split(" ").join("_"));
-    let result = data.filter(emp => {
-      return emp[36].toLowerCase() == "available"
-    })
-      .filter(emp => {
-
-        if (emp[5]) {
-          let cat = emp[5].toLowerCase();
-          for (let i of ["infh", "cldh", "inft", "cldt"]) {
-            if (cat.indexOf(i) !== -1) {
-              return true;
-            }
-          }
-        }
-        if (emp[38]) {
-          let cat = emp[38].toLowerCase();
-          for (let i of ["infrastructure ", 'cloud', 'siem', 'network', 'soc', 'information']) {
-            if (cat.indexOf(i) !== -1) {
-              return true;
-            }
-          }
-        }
+    let result = data;
+    if (this.selectedType == "benchlist")
+      result = data.filter(emp => {
+        return emp[36].toLowerCase() == "available"
       })
+        .filter(emp => {
+
+          if (emp[5]) {
+            let cat = emp[5].toLowerCase();
+            for (let i of ["infh", "cldh", "inft", "cldt"]) {
+              if (cat.indexOf(i) !== -1) {
+                return true;
+              }
+            }
+          }
+          if (emp[38]) {
+            let cat = emp[38].toLowerCase();
+            for (let i of ["infrastructure ", 'cloud', 'siem', 'network', 'soc', 'information']) {
+              if (cat.indexOf(i) !== -1) {
+                return true;
+              }
+            }
+          }
+        })
 
     const savingData = result.map(emp => {
       const obj = {};
@@ -75,7 +84,6 @@ export class UploadCandidatesComponent implements OnInit {
       return obj
     })
     return savingData;
-    console.log(savingData);
   }
 
 }
